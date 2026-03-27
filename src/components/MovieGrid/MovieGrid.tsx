@@ -1,20 +1,12 @@
 import css from './MovieGrid.module.css'
 import type { Movie } from '../../types/movie'
-import Loader from '../Loader/Loader';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
-interface MovieGrid {
+interface MovieGridProps {
     movies: Movie[];
-    isLoading: boolean;
-    isError: boolean;
     onSelect: (movie: Movie) => void;
 }
 
-const MovieGrid = ({ movies, isLoading, isError, onSelect }: MovieGrid) => {
-
-    if(isLoading) return <Loader />
-    if(isError) return <ErrorMessage />
-    if(!movies) return;
+const MovieGrid = ({ movies, onSelect }: MovieGridProps) => {
 
   return (
     <ul className={css.grid}>

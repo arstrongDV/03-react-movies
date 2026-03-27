@@ -7,18 +7,20 @@ import toast from 'react-hot-toast';
 import MovieGrid from '../MovieGrid/MovieGrid';
 import { Toaster } from 'react-hot-toast';
 import MovieModal from '../MovieModal/MovieModal';
+import Loader from '../Loader/Loader';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 function App() {
 
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [query, setQuery] = useState<FormDataEntryValue | null>('');
+  const [query, setQuery] = useState<string>('');
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const [selectedMovie, setSelectedMovie] = useState<Movie>();
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchMovies = async() => {
@@ -28,9 +30,9 @@ function App() {
       try{
         const res = await getMovies(String(query));
         console.log(res);
-        setMovies(res.data.results);
+        setMovies(res);
 
-        if(res.data.results.length == 0){
+        if(res.length == 0){
           toast("No movies found for your request.")
         }
 
@@ -48,16 +50,20 @@ function App() {
   }, [query])
 
   useEffect(() => {
-    if(selectedMovie) setIsOpen(true);
+    if(selectedMovie) {
+      setSelectedMovie(null);
+    };
   }, [selectedMovie])
 
   return (
     <div className={style.app}>
-      <SearchBar setQuery={setQuery} />
-      <MovieGrid movies={movies} isLoading={isLoading} isError={isError} onSelect={(movie) => setSelectedMovie(movie)} />
+      <SearchBar onSubmit={setQuery} />
+      {isLoading ? <Loader /> : isError ? <ErrorMessage /> : (
+        <MovieGrid movies={movies} onSelect={(movie) => setSelectedMovie(movie)} />
+      )}
 
-      {isOpen && selectedMovie && (
-        <MovieModal movie={selectedMovie} onClose={() => setIsOpen(!isOpen)}/>
+      {selectedMovie && (
+        <MovieModal movie={selectedMovie} onClose={() => setSelectedMovie(null)}/>
       )}
 
       <Toaster />
