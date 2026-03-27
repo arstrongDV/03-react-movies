@@ -30,9 +30,9 @@ function App() {
       try{
         const res = await getMovies(String(query));
         console.log(res);
-        setMovies(res.results);
+        setMovies(res);
 
-        if(res.results.length == 0){
+        if(res.length == 0){
           toast("No movies found for your request.")
         }
       } catch(err) {
