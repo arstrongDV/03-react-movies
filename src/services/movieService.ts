@@ -12,5 +12,5 @@ export const getMovies = async(query: string): Promise<MoviesResponse> => {
             Authorization: `Bearer ${TOKEN}`,
         }
     })
-    return res.data.results;
+    return res.data;
 }
