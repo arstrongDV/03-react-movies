@@ -30,17 +30,14 @@ function App() {
       try{
         const res = await getMovies(String(query));
         console.log(res);
-        setMovies(res);
+        setMovies(res.results);
 
-        if(res.length == 0){
+        if(res.results.length == 0){
           toast("No movies found for your request.")
         }
-
-        setIsLoading(false);
       } catch(err) {
         toast.error("Something went wrong!");
         setIsError(true);
-        setIsLoading(false);
       } finally {
         setIsLoading(false);
       }
@@ -48,12 +45,6 @@ function App() {
 
     fetchMovies();
   }, [query])
-
-  useEffect(() => {
-    if(selectedMovie) {
-      setSelectedMovie(null);
-    };
-  }, [selectedMovie])
 
   return (
     <div className={style.app}>
